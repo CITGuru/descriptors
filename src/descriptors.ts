@@ -302,31 +302,33 @@ export function DescriptorsFactory(ecc: TinySecp256k1Interface) {
       try {
         payment = p2pkh({ output, network });
         isSegwit = false;
-      } catch (e) {}
+      } catch (e) { }
       try {
         payment = p2sh({ output, network });
         // It assumes that an addr(SH_ADDRESS) is always a add(SH_WPKH) address
         isSegwit = true;
-      } catch (e) {}
+      } catch (e) { }
       try {
         payment = p2wpkh({ output, network });
         isSegwit = true;
-      } catch (e) {}
+      } catch (e) { }
       try {
         payment = p2wsh({ output, network });
         isSegwit = true;
-      } catch (e) {}
+      } catch (e) { }
       try {
         payment = p2tr({ output, network });
         isSegwit = true;
-      } catch (e) {}
-      try {
-        payment = p2sh({ redeem: p2wpkh({ output, network }), network });
-        redeemScript = payment.redeem?.output;
-        isSegwit = true;
-      } catch (e) {}
-      if (!payment) {
-        throw new Error(`Error: invalid address ${matchedAddress}`);
+      } catch (e) { }
+      if (matchedAddress.startsWith("2")) {
+        try {
+          payment = p2sh({ redeem: p2wpkh({ output, network }), network });
+          redeemScript = payment.redeem?.output;
+          isSegwit = true;
+        } catch (e) { }
+        if (!payment) {
+          throw new Error(`Error: invalid address ${matchedAddress}`);
+        }
       }
     }
     //pk(KEY)
@@ -736,11 +738,11 @@ export function DescriptorsFactory(ecc: TinySecp256k1Interface) {
         signatures === 'DANGEROUSLY_USE_FAKE_SIGNATURES'
           ? signatures
           : signatures
-              .map(
-                s =>
-                  `${s.pubkey.toString('hex')}-${s.signature.toString('hex')}`
-              )
-              .join('|');
+            .map(
+              s =>
+                `${s.pubkey.toString('hex')}-${s.signature.toString('hex')}`
+            )
+            .join('|');
       this.getScriptSatisfaction = memoize(
         this.getScriptSatisfaction,
         // resolver function:
