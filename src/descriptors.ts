@@ -320,6 +320,11 @@ export function DescriptorsFactory(ecc: TinySecp256k1Interface) {
         payment = p2tr({ output, network });
         isSegwit = true;
       } catch (e) {}
+      try {
+        payment = p2sh({ redeem: p2wpkh({ output, network }), network });
+        redeemScript = payment.redeem?.output;
+        isSegwit = true;
+      } catch (e) {}
       if (!payment) {
         throw new Error(`Error: invalid address ${matchedAddress}`);
       }
