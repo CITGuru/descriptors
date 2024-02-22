@@ -326,9 +326,9 @@ export function DescriptorsFactory(ecc: TinySecp256k1Interface) {
           redeemScript = payment.redeem?.output;
           isSegwit = true;
         } catch (e) { }
-        if (!payment) {
-          throw new Error(`Error: invalid address ${matchedAddress}`);
-        }
+      }
+      if (!payment) {
+        throw new Error(`Error: invalid address ${matchedAddress}`);
       }
     }
     //pk(KEY)
